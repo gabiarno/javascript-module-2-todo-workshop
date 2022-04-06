@@ -1,7 +1,10 @@
 let todos = [];
 
 const createtodo = (text) => {
-    todos.push(text);
+    todos.push({
+        title: text,
+        completed: false,
+    });
 }
 document.querySelector('#new-todo').addEventListener('submit', (e) => {
     e.preventDefault()
@@ -19,11 +22,22 @@ document.querySelector('#new-todo').addEventListener('submit', (e) => {
 });
 
 const removeTodo = (todoEl) => {
+    console.log("todoEl",todoEl);
+    "hol".toLowerCase();
+    console.log("todoEl.textContent",todoEl.textContent);
     const todoIndex = todos.findIndex ((todo) => {
-        return todo.toLowerCase() === todoEl.textContent.toLowerCase();
+        return todo.title.toLowerCase() === todoEl.textContent.toLowerCase();
     });
     if (todoIndex > -1){
         todos.splice(todoIndex, 1);
+    }
+}
+
+const toggleTodo = (title) => {
+    const todo = todos.find((todo) => todo.title.toLowerCase() === title.toLowerCase())
+
+    if (todo) {
+        todo.completed = !todo.completed
     }
 }
 
@@ -32,6 +46,17 @@ function generateTodoDOM (todo) {
     const containerEl = document.createElement("div");
     const todoText = document.createElement("span");
     const removeTodoButton = document.createElement("button");
+
+    const checkbox = document.createElement("input");
+    checkbox.setAttribute("type","checkbox");
+    checkbox.checked = todo.completes;
+
+    containerEl.appendChild(checkbox);
+    checkbox.addEventListener("change", e => {
+        console.log("check changed");
+        toggleTodo(todoObj.title);
+        renderTodos(todos);
+    })
 
     removeTodoButton.textContent = "remove";
     removeTodoButton.classList.add("button","button--text")
@@ -42,7 +67,7 @@ function generateTodoDOM (todo) {
         console.log("todo",todos);
         renderTodos(todos);
     })
-    todoText.textContent = todo;
+    todoText.textContent = todo.title;
     todoEl.classList.add("list-item");
     containerEl.classList.add("list-item_container");
 
